@@ -206,13 +206,24 @@ LT = tree2lkpt(tree) ;
  
 # application
 
+
 function find_position_point(
     pt::Vector{V},
     LTS;
     eps=1e-16
     ) where {V<:Real}
-    @assert length(pt) == length(LTS)
+    # have a faster version? challenge me.
+    # @assert length(pt) == length(LTS)
     intersect([look_up_value_in_tree(pt[k],LTS[k],eps=eps) for k=1:length(pt)]...)
+end
+
+function find_position_point_naiive(
+    pt,
+    PL;
+    eps=1e-16
+    )
+    # The slowest way I've ever thought of.
+    findall(vec(sum(abs.(pt.-PL),dims=1)).<eps)
 end
 
 
@@ -251,6 +262,9 @@ lookuptables = [make_tree(vec(grid[1,:]),0.01),
 
 ## test speed and verify results
 @time all([i==find_position_point(grid[:,i],lookuptables)[1] for i=1:size(grid,2)])
+
+## don't run, toooooooooooooooo slow 
+@time all([i==find_position_point_naiive(grid[:,i],grid)[1] for i=1:size(grid,2)])
 
 ##
 size(grid)
