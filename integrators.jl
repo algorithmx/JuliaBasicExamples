@@ -1,5 +1,9 @@
 using LinearAlgebra
+
+# reference: http://fourier.eng.hmc.edu/e176/lectures/NM/node21.html
+# see also 
 using NLsolve
+
 using Plots
 
 eye(N) = Matrix(1.0I,N,N)
